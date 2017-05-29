@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Simulations</title>
+
+    <style>
+        .div1{
+            background-image: url({% static 'img/6.jpg' %});
+            background-size: cover;
+        }
+    </style>
+
+    <link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'bootstrap/dist/js/jquery-1.8.1.min.js' %}"></script>
+    
+  </head>
+
+  
+
+    <body>
+        
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                <a href="{% url 'system:index' %}" class="navbar-brand">Home</a>
+                </div>
+            </div>
+        </nav>
+ 
+        <div class="jumbotron div1" style="margin-top:35px;">
+        <div class="container">
+            <br><br><br><br><br>
+            <h1><small style="color:#000;font-family:impact">Simulation of Process Scheduling</small></h1>
+            <br><br>
+            <button class='btn btn-lg btn-primary' name='jump' type='button'>Click to Continue</button>
+            <br><br><br><br><br><br>
+            <br><br><br><br><br><br> 
+            
+
+        </div>
+        </div>
+
+        <div class="container">
+            <br><br><br>
+            <h1>Choose a simulation</h1>
+            <div class="row">
+                <div class="col-xs-4">
+                    <h2 class="page-header"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;<a class="text-warning" href="{% url 'system:fcfsUpdate' %}">FCFS</a></h2>
+                    <p><span class="glyphicon glyphicon-info-sign"></span>&nbsp;First come first serve</p>
+                    <br>
+                    <p><span class="glyphicon glyphicon-ok"></span>&nbsp;Easy to realize</p>
+                    <br>
+                    <p><span class="glyphicon glyphicon-remove"></span>&nbsp;Low efficiency</p>
+                    <p><span class="glyphicon glyphicon-remove"></span>&nbsp;No account for service time</p>
+                </div>
+                <div class="col-xs-4">
+                    <h2 class="page-header"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;<a class="text-warning" href="{% url 'system:staticUpdate' %}">Static Prior</a></h2>
+                    <p><span class="glyphicon glyphicon-info-sign"></span>&nbsp;Its prior was defined when created and keep the prior throughout the running time</p>
+                    <br>
+                    <p><span class="glyphicon glyphicon-ok"></span>&nbsp;Easy to realize</p>
+                    <p><span class="glyphicon glyphicon-ok"></span>&nbsp;Small system cost</p>
+                    <br>
+                    <p><span class="glyphicon glyphicon-remove"></span>&nbsp;Stubborn</p>
+                </div>
+                <div class="col-xs-4">
+                    <h2 class="page-header"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;<a class="text-warning" href="{% url 'system:dynamicUpdate' %}">Dynamic Prior</a></h2>
+                    <p><span class="glyphicon glyphicon-info-sign"></span>&nbsp;Its prior was initialled when created but changed by the condition of scheduling</p>
+                    <br>
+                    <p><span class="glyphicon glyphicon-ok"></span>&nbsp;Smart and flexible</p>
+                    <p><span class="glyphicon glyphicon-ok"></span>&nbsp;prevent the process from not being scheduled</p>
+                    <br>
+                    <p><span class="glyphicon glyphicon-remove"></span>&nbsp;Consume executing time</p>
+                    <p><span class="glyphicon glyphicon-remove"></span>&nbsp;Large system cost</p>
+                </div>
+            </div>
+            <br><br><br><br><br><br>
+        </div>
+
+
+    <script>
+        $("button[name='jump']").click(function(){
+            $('body','html').animate({scrollTop:$(window).height()},3000)
+        })
+    </script>
+    <script src="{% static 'bootstrap/dist/js/jquery.min.js' %}">
+    </script>
+    <script href="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    </body>
+</html>

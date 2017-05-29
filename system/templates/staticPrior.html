@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Simulation</title>
+
+    <style>
+    	.btn1{
+    		margin-top: 5px;
+        margin-left: 5px;
+    	}
+      .top{
+        margin-top: 50px;
+      }
+      .pd1{
+        padding-right: 15px;
+      }
+      .pd4{
+        padding-right: 50px;
+      }
+      .pd2{
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 60px;
+        padding-right: 60px;
+        text-align: center;
+      }
+      .pd3{
+        padding-bottom: 1px;
+        padding-left: 62px;
+        padding-right: 80px;
+      }
+      .texthn{
+        color: #555;
+        font-family: verdana;
+      }
+      .txtpad{
+        padding-left: 165px;
+      }
+
+    </style>
+
+    <link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'bootstrap/dist/js/jquery-1.8.1.min.js' %}"></script>
+    <script type="text/javascript" language="javascript">
+
+    var cwait = 0;
+    var cblock = 0;
+    var cfinish = 0;
+    var clock = {{ clock }};
+    clock = parseInt(clock);
+      function update(c) {
+        $("#count").text(c);
+        $("#pid").text("NULL");
+        $("#prior").text("NULL");
+        $("#start").text("NULL");
+        $("#used").text("NULL");
+        $.getJSON("/system/staticPrior/" + c + "/", function(data) {
+          $.each(data, function() {
+            switch (this.state){
+              case 'w': $("#wait").append("<tr><td class='pd3'><h4><small>"+this.pid+"</small></h4></td><td class='pd3'><h4><small>"+this.prior+"</small></h4></td><td class='pd3'><h4><small>"+this.start+"</small></h4></td><td class='pd3'><h4><small>"+this.used+"</small></h4></td></tr>");
+              cwait ++;
+              break;
+              case 'b': $("#block").append("<tr><td class='pd3'><h4><small>"+this.pid+"</small></h4></td><td class='pd3'><h4><small>"+this.prior+"</small></h4></td><td class='pd3'><h4><small>"+this.start+"</small></h4></td><td class='pd3'><h4><small>"+this.used+"</small></h4></td></tr>");
+              cblock ++;
+              break;
+              case 'f': $("#finish").append("<tr><td class='pd3'><h4><small>"+this.pid+"</small></h4></td><td class='pd3'><h4><small>"+this.prior+"</small></h4></td><td class='pd3'><h4><small>"+this.start+"</small></h4></td><td class='pd3'><h4><small>"+this.used+"</small></h4></td></tr>");
+              cfinish ++;
+              break;
+              case 'r': $("#pid").text(this.pid);
+                        $("#prior").text(this.prior);
+                        $("#start").text(this.start);
+                        $("#used").text(this.used);
+                        break;
+            };
+          });
+          $("#waitNum").text(cwait);
+          $("#blockNum").text(cblock);
+          $("#finishNum").text(cfinish);
+          cwait = 0; cblock = 0; cfinish = 0;
+        })
+      }
+
+      var t = null;
+      var initial;
+      function timeDown(c) {
+        if (c <= clock)
+        {
+          $("#wait").empty();
+          $("#block").empty();
+          $("#finish").empty();
+          update(c);
+          c ++;
+          initial = c;
+          t = setTimeout(function() {timeDown(c);}, 1000);
+        }
+        else
+        {
+          
+          clearTimeout(t)
+        }
+      }
+
+      
+      function generate() {    
+        $("#gen").click(function(){
+          $("#proc").prepend({{ num }});
+          timeDown(1);
+          document.getElementById("gen").disabled = true;
+          // document.getElementById("pause").disabled = false;
+        });
+      }
+      console.log(initial);
+
+      function cutOut() {
+        $("#pause").click(function() {
+          clearTimeout(t);
+          // document.getElementById("gen").disabled = false;
+          // document.getElementById("stop").disabled = true;
+        });
+      }
+
+      function goOn() {
+        $("#continue").click(function(){
+          timeDown(initial);
+        });
+      }
+
+      $(document).ready(function() {
+        generate();
+        cutOut();
+        goOn();
+        // pause();
+      })
+      
+    </script>
+   
+  </head>
+
+  
+
+    <body>
+        
+     	<nav class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="container">
+		      <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target="#responsive-bar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+		        <a href="{% url 'system:index' %}" class="navbar-brand">Home</a>
+		      </div>
+		      <div class="collapse navbar-collapse" id="responsive-bar">
+		        <ul class="nav navbar-nav">
+		          <li><a href="{% url 'system:fcfsUpdate' %}">FCFS</a></li>
+		          <li class="active"><a href="{% url 'system:staticUpdate' %}">Static Prior</a></li>
+		          <li><a href="{% url 'system:dynamicUpdate' %}">Dynamic Prior</a></li>
+              <li><a href="{% url 'system:analysis' %}">Analysis</a></li>
+		        </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <button id="gen" class="btn btn-default btn1">Generate</button>
+              <button id="pause" class="btn btn-default btn1">Pause</button>
+              <button id="continue" class="btn btn-default btn1">Continue</button>
+            </ul>
+		      </div>
+		    </div>
+  		</nav>
+
+  		<div class="container top">
+        <h4 class="texthn">
+          <table>
+            <tr>
+              <td class="pd4" id="proc"> processes</td>
+              <td class="pd1">Clock:</td>
+              <td id="count" class="pd4">0</td>
+              <td class="pd1">WaitNum:</td>
+              <td id="waitNum" class="pd4">0</td>
+              <td class="pd1">BlockNum:</td>
+              <td id="blockNum" class="pd4">0</td>
+              <td class="pd1">FinishNum:</td>
+              <td id="finishNum" class="pd4">0</td>
+            </tr>
+          </table>
+          <hr>
+        </h4>
+        <h4 class="texthn">
+          <table style="margin-left:100px">
+            <tr>
+              <td class="pd2">State</td>
+              <td class="pd2">PID</td>
+              <td class="pd2">Prior</td>
+              <td class="pd2">Start</td>
+              <td class="pd2">Used</td>
+            </tr>
+            <tr>
+              <td class="pd2">Running</td>
+              <td class="pd2"><small id="pid">NULL</small></td>
+              <td class="pd2"><small id="prior">NULL</small></td>
+              <td class="pd2"><small id="start">NULL</small></td>
+              <td class="pd2"><small id="used">NULL</small></td>
+            </tr>
+          </table>
+          <hr>
+        </h4>
+      </div>
+      <div class="container">
+        <h4 class="texthn txtpad">Waiting</h4>
+        <table style="margin-left:294px" id="wait">
+        </table>
+        <hr>
+      </div>
+      
+
+      <div class="container">
+        <h4 class="texthn txtpad">Blocked</h4>
+        <table style="margin-left:294px" id="block">
+        </table>
+        <hr>
+      </div>
+
+      <div class="container">
+        <h4 class="texthn txtpad">Finished</h4>
+        <table style="margin-left:294px" id="finish">
+        </table>
+        <hr>
+      </div>
+
+    
+    <script src="{% static 'bootstrap/dist/js/jquery.min.js' %}">
+    </script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+    </body>
+</html>

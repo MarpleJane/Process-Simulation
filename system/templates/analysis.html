@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>Simulation</title>
+
+	<link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'bootstrap/dist/js/jquery-1.8.1.min.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+    	$("#processNum").fadeIn(1000);
+    	$("#clocks").fadeIn(2000);
+    	$("#assume").fadeIn(3000);
+    });
+    </script>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="container">
+		      <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target="#responsive-bar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+		        <a href="{% url 'system:index' %}" class="navbar-brand">Home</a>
+		      </div>
+		      <div class="collapse navbar-collapse" id="responsive-bar">
+		        <ul class="nav navbar-nav">
+		          <li><a href="{% url 'system:fcfsUpdate' %}">FCFS</a></li>
+		          <li><a href="{% url 'system:staticUpdate' %}">Static Prior</a></li>
+		          <li><a href="{% url 'system:dynamicUpdate' %}">Dynamic Prior</a></li>
+		          <li class="active"><a href="{% url 'system:analysis' %}">Analysis</a></li>
+		        </ul>
+		      </div>
+		    </div>
+  		</nav>
+
+
+  	<div class="container" style="margin:70px">
+  		<div id="processNum" style="display:none">
+  			<h1><p align="center">Generate {{ num }} process</p></h1>
+  			<hr>
+  		</div>
+  		<table class="table table-striped" id="clocks" style="display:none">
+  			<tr>
+  				<td><h4>FCFS clock</h4></td>
+  				<td>
+  					<h4><small>{{ fcfsClock }}</small></h4>
+  				</td>
+  			</tr>
+  			<tr>
+  				<td><h4>staticPrior clock</h4></td>
+  				<td>
+  					<h4><small>{{ stClock }}</small></h4>
+  				</td>
+  			</tr>
+  			<tr>
+  				<td><h4>dynamicPrior clock</h4></td>
+  				<td>
+  					<h4><small>{{ dyClock }}</small></h4>
+  				</td>
+  			</tr>
+  		</table>
+  		<br>
+  		<div id="assume" style="display:none">
+  			<p><h5>Assume:</h5></p>
+  			<p><h5><small>process num from 5 to 10.</small></h5></p>
+  			<p><h5><small>prior from 0 to 100.</small></h5></p>
+  			<p><h5><small>serial from 6 to 12.</small></h5></p>
+  			<p><h5><small>cpu and io time from 5 to 15.</small></h5></p>
+  		</div>
+  	</div>
+</body>
+</html>

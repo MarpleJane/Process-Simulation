@@ -1,0 +1,74 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+</html> -->
+
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="{% static 'bootstrap/dist/js/jquery-1.8.1.min.js' %}"></script>
+	<script type="text/javascript" language="javascript">
+		function update(i){
+				$.getJSON("/system/data/" + i + "/", function(data){
+					$.each(data, function(){
+						$("#content").html('<p>' + this.name + ' is a ' + this.subject + ' teacher.</p>')
+					});
+				});
+			}
+
+			function timeDown(limit, i){
+				limit --;
+				if (i > 4) {
+					i = 0;
+				}
+				if (limit < 0) {
+					limit = 3;
+					update(i);
+					i ++;
+				}
+				$('#time').text("after " + limit + "s refresh");
+				setTimeout(function() {
+					timeDown(limit, i);
+				}, 1000)
+			}
+
+			$(document).ready(function() {
+				timeDown(0, 0);
+			})
+		// 	var i = 0;
+		// var t = null;
+		// function counter()
+		// {
+		// 	if(i <= 5)
+		// 	{
+		// 		document.getElementById("flash").firstChild.nodeValue = i++;
+		// 		t = setTimeout("counter()", 1000);
+		// 	}
+		// 	else
+		// 	{
+		// 		clearTimeout(t);
+		// 	}
+		// }
+	</script>
+		
+	
+</head>
+<body>
+	<h1>Ajax Test</h1>
+	<p id="time"></p>
+	<div id="content"></div>
+	<!-- <div name="div1">
+		<p id="flash">0</p>
+	</div>
+	 -->
+</body>
+</html>
